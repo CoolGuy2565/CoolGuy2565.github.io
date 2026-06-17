@@ -257,31 +257,25 @@ function craft(recipeIndex) {
     }
 }
 
-// Input
+// Input - key events
 const keys = {};
 game.player.direction = 'right';
 
 document.addEventListener('keydown', (e) => {
     if (!gameActive) return;
     
-    if (e.key === 'ArrowUp') { game.player.y = Math.max(0, game.player.y - 1); }
-    if (e.key === 'ArrowDown') { game.player.y++; }
-    if (e.key === 'ArrowLeft') { game.player.x = Math.max(0, game.player.x - 1); game.player.direction = 'left'; }
-    if (e.key === 'ArrowRight') { game.player.x++; game.player.direction = 'right'; }
-    if (e.key === 'b') breakBlock();
-    if (e.key === 'p') placeBlock();
-    if (e.key === 'c') { game.menuOpen = !game.menuOpen; }
-    if (e.key === 'Escape') { document.getElementById('menu').classList.toggle('hidden'); }
+    if (e.key === 'ArrowUp') { game.player.y = Math.max(0, game.player.y - 1); e.preventDefault(); }
+    if (e.key === 'ArrowDown') { game.player.y++; e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { game.player.x = Math.max(0, game.player.x - 1); game.player.direction = 'left'; e.preventDefault(); }
+    if (e.key === 'ArrowRight') { game.player.x++; game.player.direction = 'right'; e.preventDefault(); }
+    if (e.key === 'b' || e.key === 'B') breakBlock();
+    if (e.key === 'p' || e.key === 'P') placeBlock();
+    if (e.key === 'c' || e.key === 'C') { game.menuOpen = !game.menuOpen; }
+    if (e.key === 'Escape') { document.getElementById('menu').classList.toggle('hidden'); gameActive = !gameActive; }
     
     // Craft shortcuts
     for (let i = 0; i < 9; i++) {
         if (e.key === (i + 1).toString()) craft(i);
-    }
-    
-    // Item selection with numbers
-    const invItems = Object.keys(game.inventory).filter(k => game.inventory[k] > 0);
-    for (let i = 0; i < invItems.length && i < 9; i++) {
-        if (e.key === (i + 1).toString()) game.selectedItem = invItems[i];
     }
 });
 
@@ -316,6 +310,11 @@ canvas.addEventListener('click', (e) => {
     }
 });
 
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
 // Game loop
 function gameLoop() {
     ctx.fillStyle = '#87CEEB';
@@ -334,10 +333,18 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Start game
-document.getElementById('startBtn').addEventListener('click', () => {
-    document.getElementById('menu').classList.add('hidden');
-    gameActive = true;
+// Wait for page load then setup button
+window.addEventListener('DOMContentLoaded', () => {
+    const startBtn = document.getElementById('startBtn');
+    if (startBtn) {
+        startBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Start button clicked');
+            document.getElementById('menu').classList.add('hidden');
+            gameActive = true;
+        });
+    }
 });
 
 // Generate and start
