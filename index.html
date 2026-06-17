@@ -3,35 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Online</title>
-    <!-- Connecting CSS Styles -->
+    <title>HTML Minecraft Clone</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Game UI -->
+    <!-- Прицел -->
     <div id="crosshair">+</div>
     
-    <div id="ui-overlay">
-        <strong>Controls:</strong><br>
-        • Click screen to lock mouse<br>
-        • W, A, S, D - Move Around<br>
-        • Space - Jump<br>
-        • Left Click - Destroy Block<br>
-        • Right Click - Place Block
+    <!-- Игровое главное меню -->
+    <div id="menu-overlay">
+        <div id="menu-box">
+            <h1>MINECRAFT</h1>
+            <p class="subtitle">HTML / Codespaces Edition</p>
+            <button id="start-btn">Back to Game</button>
+            <div class="controls-guide">
+                <strong>Controls:</strong><br>
+                W, A, S, D - Move | SPACE - Jump<br>
+                1, 2, 3 - Switch Blocks<br>
+                Left Click - Destroy | Right Click - Place
+            </div>
+        </div>
     </div>
 
-    <!-- Hotbar / Inventory UI -->
+    <!-- Инвентарь (Хотбар) -->
     <div id="hotbar">
         <div class="slot active" data-block="grass"></div>
         <div class="slot" data-block="dirt"></div>
         <div class="slot" data-block="stone"></div>
     </div>
 
-    <!-- External 3D Libraries -->
+    <!-- Подключаем 3D библиотеки -->
     <script src="https://cloudflare.com"></script>
     <script src="https://jsdelivr.net"></script>
-    
-    <!-- Connecting JavaScript Logic -->
     <script src="game.js"></script>
 </body>
 </html>
