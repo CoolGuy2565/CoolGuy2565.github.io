@@ -25,7 +25,7 @@ const BLOCK_TYPES = {
 const gameState = {
     blocks: {},
     player: {
-        position: new THREE.Vector3(50, 30, 50),
+        position: new THREE.Vector3(50, 50, 50),
         velocity: new THREE.Vector3(),
         rotation: new THREE.Euler(),
         isOnGround: false,
@@ -133,13 +133,20 @@ window.addEventListener('wheel', (e) => {
     updateInventoryDisplay();
 });
 
+// Simple deterministic seeded random
+function seededRandom(x, z, seed = 12345) {
+    const n = Math.sin(x * 12.9898 + z * 78.233 + seed) * 43758.5453;
+    return n - Math.floor(n);
+}
+
 // Terrain generation using Perlin-like noise
 function getTerrainHeight(x, z) {
-    // Simple noise using sine waves
-    const scale1 = Math.sin(x * 0.05) * Math.sin(z * 0.05) * 5;
-    const scale2 = Math.sin(x * 0.01) * Math.sin(z * 0.01) * 10;
-    const height = 10 + scale1 + scale2 + Math.random() * 3;
-    return Math.floor(height);
+    // Multi-scale noise for natural terrain
+    const scale1 = Math.sin(x * 0.05) * Math.cos(z * 0.05) * 8;
+    const scale2 = Math.sin(x * 0.02) * Math.cos(z * 0.02) * 12;
+    const scale3 = seededRandom(x, z) * 2;
+    const height = 15 + scale1 + scale2 + scale3;
+    return Math.max(5, Math.floor(height));
 }
 
 // Get block type based on position
@@ -190,12 +197,12 @@ function createBlockMesh(x, y, z, blockType) {
 
 // Load chunks around player
 function loadChunks() {
-    const CHUNK_SIZE = 16;
+    const CHUNK_SIZE = 20;
     const playerChunkX = Math.floor(gameState.player.position.x / CHUNK_SIZE);
     const playerChunkZ = Math.floor(gameState.player.position.z / CHUNK_SIZE);
     
-    for (let cx = playerChunkX - 2; cx <= playerChunkX + 2; cx++) {
-        for (let cz = playerChunkZ - 2; cz <= playerChunkZ + 2; cz++) {
+    for (let cx = playerChunkX - 3; cx <= playerChunkX + 3; cx++) {
+        for (let cz = playerChunkZ - 3; cz <= playerChunkZ + 3; cz++) {
             for (let x = cx * CHUNK_SIZE; x < (cx + 1) * CHUNK_SIZE; x++) {
                 for (let z = cz * CHUNK_SIZE; z < (cz + 1) * CHUNK_SIZE; z++) {
                     const terrainHeight = getTerrainHeight(x, z);

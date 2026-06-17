@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Top face (grass) -->
+  <polygon points="25,25 75,25 75,45 25,45" fill="#33cc33" stroke="#1a6b1a" stroke-width="2"/>
+  
+  <!-- Left face (dirt) -->
+  <polygon points="25,25 25,75 50,90 50,40" fill="#8b6f47" stroke="#654321" stroke-width="2"/>
+  
+  <!-- Right face (dirt) -->
+  <polygon points="75,25 50,40 50,90 75,75" fill="#9d7e52" stroke="#654321" stroke-width="2"/>
+  
+  <!-- Grass details on top -->
+  <line x1="35" y1="20" x2="35" y2="25" stroke="#228b22" stroke-width="1.5"/>
+  <line x1="50" y1="18" x2="50" y2="25" stroke="#228b22" stroke-width="1.5"/>
+  <line x1="65" y1="20" x2="65" y2="25" stroke="#228b22" stroke-width="1.5"/>
+</svg>
