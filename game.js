@@ -1,6 +1,5 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@r128/build/three.module.js';
-
-console.log('THREE loaded:', THREE !== undefined);
+console.log('Game script loaded');
+console.log('THREE available:', typeof THREE !== 'undefined');
 
 // Simple terrain generation
 function getTerrainHeight(x, z) {
