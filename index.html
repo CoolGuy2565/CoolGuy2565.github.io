@@ -6,10 +6,15 @@
     <title>Minecraft Online</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
-        body {
+        * {
             margin: 0;
-            overflow: hidden;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: Arial, sans-serif;
+            overflow: hidden;
             background: #000;
         }
 
@@ -18,8 +23,56 @@
             height: 100vh;
         }
 
+        #menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        #menu.hidden {
+            display: none;
+        }
+
+        #menu h1 {
+            color: #4CAF50;
+            font-size: 56px;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.8);
+        }
+
+        #menu p {
+            color: #ccc;
+            font-size: 16px;
+            margin: 8px 0;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        #startBtn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        #startBtn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
         #hud {
-            position: absolute;
+            position: fixed;
             top: 10px;
             left: 10px;
             color: white;
@@ -30,42 +83,20 @@
             z-index: 10;
         }
 
-        #inventory {
-            position: absolute;
+        #info {
+            position: fixed;
             bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 5px;
+            left: 10px;
+            color: #aaa;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
             z-index: 10;
         }
 
-        .inventory-slot {
-            width: 50px;
-            height: 50px;
-            background: rgba(100, 100, 100, 0.8);
-            border: 2px solid rgba(200, 200, 200, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-
-        .inventory-slot:hover {
-            background: rgba(150, 150, 150, 0.9);
-            border-color: rgba(255, 255, 255, 0.8);
-        }
-
-        .inventory-slot.selected {
-            background: rgba(100, 150, 100, 0.9);
-            border-color: rgba(100, 255, 100, 0.8);
-        }
-
         #crosshair {
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -76,69 +107,30 @@
             pointer-events: none;
             z-index: 5;
         }
-
-        #info {
-            position: absolute;
-            bottom: 70px;
-            left: 10px;
-            color: #aaa;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 10;
-        }
-
-        #mobileControls {
-            position: absolute;
-            bottom: 70px;
-            right: 10px;
-            display: none;
-            gap: 10px;
-            z-index: 10;
-        }
-
-        .mobile-btn {
-            width: 50px;
-            height: 50px;
-            background: rgba(100, 100, 100, 0.8);
-            border: 2px solid rgba(200, 200, 200, 0.5);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        @media (max-width: 768px) {
-            #mobileControls {
-                display: flex;
-                flex-wrap: wrap;
-                width: 120px;
-            }
-        }
     </style>
 </head>
 <body>
-    <div id="gameContainer"></div>
+    <div id="menu">
+        <h1>⛏️ MINECRAFT ONLINE</h1>
+        <p style="font-size: 18px; margin-top: 20px;">A 3D Minecraft Clone Built with HTML5</p>
+        <p style="margin-top: 30px; color: #aaa;"><strong>HOW TO PLAY:</strong></p>
+        <p>WASD = Move around | Space = Jump</p>
+        <p>Mouse = Look around (click to enable)</p>
+        <p>Left Click = Break blocks | Right Click = Place blocks</p>
+        <button id="startBtn" style="margin-top: 50px; padding: 18px 50px; font-size: 22px; font-weight: bold; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s;">▶ START GAME</button>
+    </div>
+
     <div id="crosshair"></div>
+    <div id="gameContainer"></div>
+    
     <div id="hud">
-        <div>Health: <span id="health">10</span>/10</div>
-        <div>Hunger: <span id="hunger">10</span>/10</div>
-        <div>Position: <span id="position">0, 0, 0</span></div>
-        <div style="margin-top: 5px; font-size: 12px; color: #aaa;">Left Click: Break | Right Click: Place</div>
+        <div>📍 Position: <span id="position">0, 0, 0</span></div>
+        <div>⏱️ FPS: <span id="fps">60</span></div>
     </div>
+
     <div id="info">
-        <div>WASD to move | Space to jump | Scroll to select item</div>
+        <div>Click to enable mouse | Press ESC to show menu</div>
     </div>
-    <div id="mobileControls">
-        <button class="mobile-btn" id="upBtn">↑</button>
-        <button class="mobile-btn" id="downBtn">↓</button>
-        <button class="mobile-btn" id="leftBtn">←</button>
-        <button class="mobile-btn" id="rightBtn">→</button>
-        <button class="mobile-btn" id="jumpBtn">⬆</button>
-        <button class="mobile-btn" id="breakBtn">⊗</button>
-    </div>
-    <div id="inventory"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="game.js"></script>
