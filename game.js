@@ -25,7 +25,7 @@ const BLOCK_TYPES = {
 const gameState = {
     blocks: {},
     player: {
-        position: new THREE.Vector3(50, 50, 50),
+        position: new THREE.Vector3(50, 100, 50),
         velocity: new THREE.Vector3(),
         rotation: new THREE.Euler(),
         isOnGround: false,
@@ -133,30 +133,29 @@ window.addEventListener('wheel', (e) => {
     updateInventoryDisplay();
 });
 
-// Simple deterministic seeded random
-function seededRandom(x, z, seed = 12345) {
-    const n = Math.sin(x * 12.9898 + z * 78.233 + seed) * 43758.5453;
+// Simple deterministic noise function
+function noise(x, z) {
+    const n = Math.sin(x * 12.9898 + z * 78.233) * 43758.5453;
     return n - Math.floor(n);
 }
 
 // Terrain generation using Perlin-like noise
 function getTerrainHeight(x, z) {
     // Multi-scale noise for natural terrain
-    const scale1 = Math.sin(x * 0.05) * Math.cos(z * 0.05) * 8;
-    const scale2 = Math.sin(x * 0.02) * Math.cos(z * 0.02) * 12;
-    const scale3 = seededRandom(x, z) * 2;
-    const height = 15 + scale1 + scale2 + scale3;
-    return Math.max(5, Math.floor(height));
+    const n1 = Math.sin(x * 0.1) * Math.sin(z * 0.1) * 5;
+    const n2 = Math.sin(x * 0.05) * Math.sin(z * 0.05) * 8;
+    const n3 = noise(Math.floor(x * 0.2), Math.floor(z * 0.2)) * 3;
+    const height = 20 + n1 + n2 + n3;
+    return Math.max(10, Math.floor(height));
 }
 
 // Get block type based on position
 function getBlockType(x, y, z) {
-    if (y === 0) return BLOCK_TYPES.BEDROCK; // Bedrock layer (air)
     const terrainHeight = getTerrainHeight(x, z);
     
     if (y > terrainHeight) return BLOCK_TYPES.AIR;
     if (y === terrainHeight) return BLOCK_TYPES.GRASS;
-    if (y > terrainHeight - 3) return BLOCK_TYPES.DIRT;
+    if (y > terrainHeight - 4) return BLOCK_TYPES.DIRT;
     return BLOCK_TYPES.STONE;
 }
 
@@ -197,20 +196,23 @@ function createBlockMesh(x, y, z, blockType) {
 
 // Load chunks around player
 function loadChunks() {
-    const CHUNK_SIZE = 20;
-    const playerChunkX = Math.floor(gameState.player.position.x / CHUNK_SIZE);
-    const playerChunkZ = Math.floor(gameState.player.position.z / CHUNK_SIZE);
+    const CHUNK_SIZE = 16;
+    const px = Math.floor(gameState.player.position.x);
+    const pz = Math.floor(gameState.player.position.z);
     
-    for (let cx = playerChunkX - 3; cx <= playerChunkX + 3; cx++) {
-        for (let cz = playerChunkZ - 3; cz <= playerChunkZ + 3; cz++) {
+    const playerChunkX = Math.floor(px / CHUNK_SIZE);
+    const playerChunkZ = Math.floor(pz / CHUNK_SIZE);
+    
+    for (let cx = playerChunkX - 2; cx <= playerChunkX + 2; cx++) {
+        for (let cz = playerChunkZ - 2; cz <= playerChunkZ + 2; cz++) {
             for (let x = cx * CHUNK_SIZE; x < (cx + 1) * CHUNK_SIZE; x++) {
                 for (let z = cz * CHUNK_SIZE; z < (cz + 1) * CHUNK_SIZE; z++) {
                     const terrainHeight = getTerrainHeight(x, z);
-                    for (let y = 0; y < terrainHeight + 1; y++) {
+                    for (let y = 0; y <= terrainHeight; y++) {
                         const key = blockKey(x, y, z);
                         if (!gameState.blocks[key]) {
                             const blockType = getBlockType(x, y, z);
-                            if (blockType !== BLOCK_TYPES.AIR) {
+                            if (blockType !== BLOCK_TYPES.AIR && y > 0) {
                                 const mesh = createBlockMesh(x, y, z, blockType);
                                 blockGroup.add(mesh);
                                 gameState.blocks[key] = { type: blockType, mesh };
@@ -364,16 +366,17 @@ function updatePlayer(dt) {
     const pz = Math.floor(gameState.player.position.z);
     
     gameState.player.isOnGround = false;
-    const key = blockKey(px, py - 1, pz);
-    if (gameState.blocks[key] || py <= 0) {
-        gameState.player.position.y = py + 1.6;
+    const terrainAtPlayer = getTerrainHeight(px, pz);
+    
+    if (py <= terrainAtPlayer + 2) {
+        gameState.player.position.y = terrainAtPlayer + 2.5;
         gameState.player.velocity.y = 0;
         gameState.player.isOnGround = true;
     }
     
     // Boundary check
     if (gameState.player.position.y < 0) {
-        gameState.player.position.y = 30;
+        gameState.player.position.y = getTerrainHeight(px, pz) + 10;
         gameState.player.health--;
     }
     
@@ -462,4 +465,6 @@ window.addEventListener('resize', () => {
 
 // Initialize game
 updateInventoryDisplay();
+console.log('Game initialized. Spawning at:', gameState.player.position);
+console.log('Test terrain height at spawn:', getTerrainHeight(50, 50));
 animate();
