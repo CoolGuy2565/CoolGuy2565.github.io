@@ -3,36 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML Minecraft Clone</title>
+    <title>Minecraft Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Прицел -->
     <div id="crosshair">+</div>
     
-    <!-- Игровое главное меню -->
     <div id="menu-overlay">
         <div id="menu-box">
             <h1>MINECRAFT</h1>
             <p class="subtitle">HTML / Codespaces Edition</p>
-            <button id="start-btn">Back to Game</button>
+            <button id="start-btn">Click to Play</button>
             <div class="controls-guide">
                 <strong>Controls:</strong><br>
-                W, A, S, D - Move | SPACE - Jump<br>
-                1, 2, 3 - Switch Blocks<br>
+                W, A, S, D - Move Around<br>
+                SPACE - Jump | 1, 2, 3 - Switch Blocks<br>
                 Left Click - Destroy | Right Click - Place
             </div>
         </div>
     </div>
 
-    <!-- Инвентарь (Хотбар) -->
     <div id="hotbar">
         <div class="slot active" data-block="grass"></div>
         <div class="slot" data-block="dirt"></div>
         <div class="slot" data-block="stone"></div>
     </div>
 
-    <!-- Подключаем 3D библиотеки -->
     <script src="https://cloudflare.com"></script>
     <script src="https://jsdelivr.net"></script>
     <script src="game.js"></script>

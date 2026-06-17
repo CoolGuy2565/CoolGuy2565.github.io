@@ -1,8 +1,5 @@
-// ==========================================
-// 1. ИНИЦИАЛИЗАЦИЯ СЦЕНЫ
-// ==========================================
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x87CEEB); // Голубое небо
+scene.background = new THREE.Color(0x87CEEB);
 scene.fog = new THREE.FogExp2(0x87CEEB, 0.03);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -15,17 +12,11 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
 dirLight.position.set(20, 40, 20);
 scene.add(dirLight);
 
-// ==========================================
-// 2. УПРАВЛЕНИЕ МЕНЮ И МЫШЬЮ (Pointer Lock)
-// ==========================================
 const controls = new THREE.PointerLockControls(camera, document.body);
 const menuOverlay = document.getElementById('menu-overlay');
 const startBtn = document.getElementById('start-btn');
 
-// Клик по кнопке в меню запускает игру
 startBtn.addEventListener('click', () => controls.lock());
-
-// Поведение меню при входе/выходе из игры
 controls.addEventListener('lock', () => menuOverlay.style.display = 'none');
 controls.addEventListener('unlock', () => menuOverlay.style.display = 'flex');
 
@@ -44,9 +35,6 @@ function handleKey(code, isPressed) {
     if (code === 'Space') keys.Jump = isPressed;
 }
 
-// ==========================================
-// 3. ГЕНЕРАЦИЯ МИРА (Горы и Холмы)
-// ==========================================
 const blocks = [];
 const geo = new THREE.BoxGeometry(1, 1, 1);
 const materials = {
@@ -60,14 +48,13 @@ const worldDepth = 24;
 
 for (let x = -worldWidth/2; x < worldWidth/2; x++) {
     for (let z = -worldDepth/2; z < worldDepth/2; z++) {
-        // Синусоиды создают плавные холмы и низины (псевдо-шум)
         let heightValue = Math.sin(x * 0.2) * Math.cos(z * 0.2) * 3 + Math.sin(x * 0.05) * 2;
-        let groundHeight = Math.floor(heightValue) + 4; // Базовый уровень земли
+        let groundHeight = Math.floor(heightValue) + 4;
 
         for (let y = 0; y <= groundHeight; y++) {
             let type = 'dirt';
-            if (y === groundHeight) type = 'grass'; // Сверху трава
-            else if (y < groundHeight - 2) type = 'stone'; // Глубоко — камень
+            if (y === groundHeight) type = 'grass';
+            else if (y < groundHeight - 2) type = 'stone';
 
             const block = new THREE.Mesh(geo, materials[type]);
             block.position.set(x, y, z);
@@ -76,11 +63,8 @@ for (let x = -worldWidth/2; x < worldWidth/2; x++) {
         }
     }
 }
-camera.position.set(0, 10, 5); // Позиция спавна игрока повыше
+camera.position.set(0, 12, 5);
 
-// ==========================================
-// 4. ИНВЕНТАРЬ (Клавиши 1, 2, 3)
-// ==========================================
 let currentBlockType = 'grass';
 const slots = document.querySelectorAll('.slot');
 
@@ -96,22 +80,19 @@ function switchSelect(index, type) {
     currentBlockType = type;
 }
 
-// ==========================================
-// 5.СТРОИТЕЛЬСТВО И РАЗРУШЕНИЕ
-// ==========================================
 const raycaster = new THREE.Raycaster();
 window.addEventListener('mousedown', (e) => {
     if (!controls.isLocked) return;
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
     const hits = raycaster.intersectObjects(blocks);
 
-    if (hits.length > 0 && hits.distance < 5) {
-        if (e.button === 0) { // Левый клик — ломать
-            scene.remove(hits[0].object);
-            blocks.splice(blocks.indexOf(hits[0].object), 1);
-        } else if (e.button === 2) { // Правый клик — ставить
+    if (hits.length > 0 && hits.distance < 6) {
+        if (e.button === 0) {
+            scene.remove(hits.object);
+            blocks.splice(blocks.indexOf(hits.object), 1);
+        } else if (e.button === 2) {
             const newBlock = new THREE.Mesh(geo, materials[currentBlockType]);
-            newBlock.position.copy(hits[0].object.position).add(hits[0].face.normal);
+            newBlock.position.copy(hits.object.position).add(hits.face.normal);
             scene.add(newBlock);
             blocks.push(newBlock);
         }
@@ -119,9 +100,6 @@ window.addEventListener('mousedown', (e) => {
 });
 window.addEventListener('contextmenu', e => e.preventDefault());
 
-// ==========================================
-// 6. ИГРОВОЙ ЦИКЛ (Физика и Гравитация)
-// ==========================================
 const clock = new THREE.Clock();
 
 function animate() {
@@ -132,7 +110,7 @@ function animate() {
         
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
-        velocity.y -= 9.8 * 2.0 * delta; // Падение под силой гравитации
+        velocity.y -= 9.8 * 2.0 * delta;
 
         let moveZ = Number(keys.Forward) - Number(keys.Backward);
         let moveX = Number(keys.Right) - Number(keys.Left);
@@ -143,16 +121,15 @@ function animate() {
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
 
-        // Временная заглушка пола, чтобы не упасть в бесконечную бездну
         camera.position.y += velocity.y * delta;
-        if (camera.position.y < 8.5) { 
+        if (camera.position.y < 9.5) { 
             velocity.y = 0;
-            camera.position.y = 8.5;
+            camera.position.y = 9.5;
             canJump = true;
         }
 
         if (keys.Jump && canJump) {
-            velocity.y = 8.0;
+            velocity.y = 8.5;
             canJump = false;
         }
     }
