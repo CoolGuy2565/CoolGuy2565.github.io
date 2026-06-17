@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Online</title>
+    <!-- Connecting CSS Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Game UI -->
+    <div id="crosshair">+</div>
+    
+    <div id="ui-overlay">
+        <strong>Controls:</strong><br>
+        • Click screen to lock mouse<br>
+        • W, A, S, D - Move Around<br>
+        • Space - Jump<br>
+        • Left Click - Destroy Block<br>
+        • Right Click - Place Block
+    </div>
+
+    <!-- Hotbar / Inventory UI -->
+    <div id="hotbar">
+        <div class="slot active" data-block="grass"></div>
+        <div class="slot" data-block="dirt"></div>
+        <div class="slot" data-block="stone"></div>
+    </div>
+
+    <!-- External 3D Libraries -->
+    <script src="https://cloudflare.com"></script>
+    <script src="https://jsdelivr.net"></script>
+    
+    <!-- Connecting JavaScript Logic -->
+    <script src="game.js"></script>
+</body>
+</html>

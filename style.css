@@ -1,0 +1,65 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    user-select: none;
+}
+
+canvas {
+    display: block;
+}
+
+/* Crosshair in the center */
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 24px;
+    pointer-events: none;
+}
+
+/* Info Menu UI */
+#ui-overlay {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Inventory Hotbar at the bottom */
+#hotbar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border: 4px solid #333;
+    border-radius: 4px;
+}
+
+.slot {
+    width: 50px;
+    height: 50px;
+    margin: 0 4px;
+    border: 2px solid #555;
+    background-size: cover;
+}
+
+/* Colors representing items in hotbar before we add textures */
+.slot[data-block="grass"] { background-color: #557a2b; }
+.slot[data-block="dirt"] { background-color: #866043; }
+.slot[data-block="stone"] { background-color: #808080; }
+
+.slot.active {
+    border-color: #ffffff;
+    box-shadow: 0 0 10px #ffffff;
+}
