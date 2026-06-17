@@ -4,33 +4,141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minecraft Online</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background: #000;
+        }
+
+        #gameContainer {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 10;
+        }
+
+        #inventory {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .inventory-slot {
+            width: 50px;
+            height: 50px;
+            background: rgba(100, 100, 100, 0.8);
+            border: 2px solid rgba(200, 200, 200, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .inventory-slot:hover {
+            background: rgba(150, 150, 150, 0.9);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .inventory-slot.selected {
+            background: rgba(100, 150, 100, 0.9);
+            border-color: rgba(100, 255, 100, 0.8);
+        }
+
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        #info {
+            position: absolute;
+            bottom: 70px;
+            left: 10px;
+            color: #aaa;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 10;
+        }
+
+        #mobileControls {
+            position: absolute;
+            bottom: 70px;
+            right: 10px;
+            display: none;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .mobile-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(100, 100, 100, 0.8);
+            border: 2px solid rgba(200, 200, 200, 0.5);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            #mobileControls {
+                display: flex;
+                flex-wrap: wrap;
+                width: 120px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="crosshair">+</div>
-    
-    <div id="menu-overlay">
-        <div id="menu-box">
-            <h1>MINECRAFT</h1>
-            <p class="subtitle">HTML / Codespaces Edition</p>
-            <button id="start-btn">Click to Play</button>
-            <div class="controls-guide">
-                <strong>Controls:</strong><br>
-                W, A, S, D - Move Around<br>
-                SPACE - Jump | 1, 2, 3 - Switch Blocks<br>
-                Left Click - Destroy | Right Click - Place
-            </div>
-        </div>
+    <div id="gameContainer"></div>
+    <div id="crosshair"></div>
+    <div id="hud">
+        <div>Health: <span id="health">10</span>/10</div>
+        <div>Hunger: <span id="hunger">10</span>/10</div>
+        <div>Position: <span id="position">0, 0, 0</span></div>
+        <div style="margin-top: 5px; font-size: 12px; color: #aaa;">Left Click: Break | Right Click: Place</div>
     </div>
-
-    <div id="hotbar">
-        <div class="slot active" data-block="grass"></div>
-        <div class="slot" data-block="dirt"></div>
-        <div class="slot" data-block="stone"></div>
+    <div id="info">
+        <div>WASD to move | Space to jump | Scroll to select item</div>
     </div>
+    <div id="mobileControls">
+        <button class="mobile-btn" id="upBtn">↑</button>
+        <button class="mobile-btn" id="downBtn">↓</button>
+        <button class="mobile-btn" id="leftBtn">←</button>
+        <button class="mobile-btn" id="rightBtn">→</button>
+        <button class="mobile-btn" id="jumpBtn">⬆</button>
+        <button class="mobile-btn" id="breakBtn">⊗</button>
+    </div>
+    <div id="inventory"></div>
 
-    <script src="https://cloudflare.com"></script>
-    <script src="https://jsdelivr.net"></script>
-    <script src="game.js"></script>
+    <script type="module" src="game.js"></script>
 </body>
 </html>
