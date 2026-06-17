@@ -111,28 +111,28 @@
 </head>
 <body>
     <div id="menu">
-        <h1>⛏️ MINECRAFT ONLINE</h1>
-        <p style="font-size: 18px; margin-top: 20px;">A 3D Minecraft Clone Built with HTML5</p>
+        <h1>⛏️ MINECRAFT 2D</h1>
+        <p style="font-size: 18px; margin-top: 20px;">Top-Down Mining & Crafting Game</p>
         <p style="margin-top: 30px; color: #aaa;"><strong>HOW TO PLAY:</strong></p>
-        <p>WASD = Move around | Space = Jump</p>
-        <p>Mouse = Look around (click to enable)</p>
-        <p>Left Click = Break blocks | Right Click = Place blocks</p>
+        <p>Arrow Keys = Move | B = Break Block | P = Place Block</p>
+        <p>C = Open Crafting | Click Inventory = Select Item</p>
+        <p>Numbers 1-9 = Quick Craft | ESC = Menu</p>
         <button id="startBtn" style="margin-top: 50px; padding: 18px 50px; font-size: 22px; font-weight: bold; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s;">▶ START GAME</button>
     </div>
 
-    <div id="crosshair"></div>
+    <div id="crosshair" style="display: none;"></div>
     <div id="gameContainer"></div>
     
-    <div id="hud">
+    <div id="hud" style="display: none;">
         <div>📍 Position: <span id="position">0, 0, 0</span></div>
         <div>⏱️ FPS: <span id="fps">60</span></div>
     </div>
 
     <div id="info">
-        <div>Click to enable mouse | Press ESC to show menu</div>
+        <div>Arrow Keys: Move | B: Break | P: Place | C: Craft | ESC: Menu</div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="game.js"></script>
+    <script src="game2d.js"></script>
 </body>
 </html>
